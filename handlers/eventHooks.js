@@ -15,7 +15,7 @@ let responsePayload = {}; // currently not used by Okta in beta implementation
 
 /**
  *
- *  For demo purposes, we're always registering handlers from this Glitch project, so that they show
+ *  For demo purposes, we're always registering handlers from this project, so that they show
  *   up in the live Hook viewer on index.html.
  *
  **/
