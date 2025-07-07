@@ -1,6 +1,6 @@
 # Okta Hooks Demo
-
-https://es-okta-hooks.glitch.me/
+[![Netlify Status](https://api.netlify.com/api/v1/badges/59c601fe-7220-4af6-8fa8-e82832f1c0db/deploy-status)](https://app.netlify.com/projects/es-okta-hooks/deploys)
+[https://es-okta-hooks.netlify.app/](https://es-okta-hooks.netlify.app/)
 
 ## About
 
@@ -18,7 +18,7 @@ This script contains logic that uses the email domain to determine which respons
 
 To use this inline hook, you must have configured and activated an inline hook in your Okta org's Workflows section, with the following details:
 
-- URL: `<glitch-baseurl>/okta/hooks/registration/domain`
+- URL: `<netlify-baseurl>/okta/hooks/registration/domain`
 - Authentication key: `x-api-key`
 - Authentication secret: `NOTUSED` (this is just a placeholder value for demo purposes)
 
@@ -34,7 +34,7 @@ The handler located in `handlers/eventHooks.js` covers events related to `user.a
 
 To use this inline hook, you must have configured and activated an event hook in your Okta org's Workflows section, with the following details:
 
-- URL: `<glitch-baseurl>/okta/hooks/event/user-account/update`
+- URL: `<netlify-baseurl>/okta/hooks/event/user-account/update`
 
 
 ## Your Project
@@ -50,14 +50,3 @@ On the back-end,
 - add frameworks and packages in `package.json`
 - safely store app secrets in `.env` (nobody can see this but you and people you invite)
 
-# About Glitch
-
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
-
-**Glitch** is the friendly community where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
-
-Find out more [about Glitch](https://glitch.com/about).
-
-## Made by [Glitch](https://glitch.com/)
-
-\ ゜ o ゜)ノ
