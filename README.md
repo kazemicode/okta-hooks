@@ -1,7 +1,6 @@
 # Okta Hooks Demo
-[https://es-okta-hooks.netlify.app/](https://es-okta-hooks.netlify.app/)
+[https://okta-hooks.onrender.com/](https://okta-hooks.onrender.com/)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/59c601fe-7220-4af6-8fa8-e82832f1c0db/deploy-status)](https://app.netlify.com/projects/es-okta-hooks/deploys)
 
 
 ## About
@@ -20,7 +19,7 @@ This script contains logic that uses the email domain to determine which respons
 
 To use this inline hook, you must have configured and activated an inline hook in your Okta org's Workflows section, with the following details:
 
-- URL: `<netlify-baseurl>/okta/hooks/registration/domain`
+- URL: `<render-baseurl>/okta/hooks/registration/domain`
 - Authentication key: `x-api-key`
 - Authentication secret: `NOTUSED` (this is just a placeholder value for demo purposes)
 
@@ -36,7 +35,7 @@ The handler located in `handlers/eventHooks.js` covers events related to `user.a
 
 To use this inline hook, you must have configured and activated an event hook in your Okta org's Workflows section, with the following details:
 
-- URL: `<netlify-baseurl>/okta/hooks/event/user-account/update`
+- URL: `<render-baseurl>/okta/hooks/event/user-account/update`
 
 
 ## Your Project
