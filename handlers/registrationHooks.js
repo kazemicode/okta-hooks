@@ -20,10 +20,10 @@ let body;
 
 /**
  *
- * Inline hook handler for registration with demoble scenarios determined by email domain
+ * Inline hook handler for registration decisions determined by invite code
  *
  **/
-router.post("/domain", function (req, res) {
+router.post("/invite", function (req, res) {
   const payload = req.body;
 
   // Make sure we have a valid request payload
@@ -71,18 +71,10 @@ router.post("/domain", function (req, res) {
     return;
   }
 
-  // Parse user email from request payload
+  // Parse user invite_code from request payload
   const userProfile = payload.data.userProfile;
-  const emailAddress = userProfile.email;
-  const emailName = emailAddress.substring(0, emailAddress.indexOf("@")); // email username
-  const emailDomain = helpers.parseEmailDomain(emailAddress); // email domain
-  const emailPrefix = emailDomain.substring(0, emailDomain.indexOf(".")); // email prefix (e.g., allow, deny, error)
-  const parsedEmail = helpers.parseEmail(
-    emailAddress,
-    emailDomain,
-    emailPrefix,
-    emailName
-  );
+  const invite_code = userProfile.invite_code;
+
 
   title = req.originalUrl;
   description = `Below is the <b>request</b> that Okta sent to our Registration Hook`;
@@ -90,17 +82,72 @@ router.post("/domain", function (req, res) {
 
   hookViewer.emitViewerEvent(title, description, body, false);
 
-  // *** DEMO *** depending on the email domain provided in the registration form,
+  // *** DEMO *** depending on the validity of the invite code,
+  // this API will perform different actions
+  switch (invite_code) {
+    case "934232":
+      commands = [
+        {
+          type: "com.okta.action.update",
+          value: {
+            registration: "ALLOW",
+          },
+        },
+      ];
+      error = null;
+      contextMessage = {
+        statusMessage: "Registration succeeded.",
+      };
+      debugContext = {
+        contextMessage: JSON.stringify(contextMessage),
+      };
+      statusCode = 200;
+      break;
+
+    default:
+      commands = [
+        {
+          type: "com.okta.action.update",
+          value: {
+            registration: "DENY",
+          },
+        },
+      ];
+      error = {
+        errorSummary: "Registration Denied",
+        errorCauses: [
+          {
+            errorSummary: "Invalid invite code " + "(message from inline hook)",
+            reason: "INVALID_INVITE_CODE",
+          },
+        ],
+      };
+      contextMessage = {
+        status: "Registration Failed",
+        reason: "Invalid invite code",
+      };
+      debugContext = {
+        contextMessage: JSON.stringify(contextMessage),
+      };
+      statusCode = 200;
+  }
+
+
+   // *** DEMO *** depending on the email domain provided in the registration form,
   // this API will perform different actions
   switch (emailPrefix) {
     case "allow":
       commands = [
         {
+          type: "com.okta.action.update",
+          value: {
+            registration: "ALLOW",
+          },
           type: "com.okta.user.profile.update",
           value: {
-            email: parsedEmail,
-          },
-        },
+            email: parsedEmail
+          }
+        }
       ];
       error = null;
       contextMessage = {
@@ -128,7 +175,7 @@ router.post("/domain", function (req, res) {
             errorSummary:
               "Invalid email domain: " +
               emailDomain +
-              " (message from inline hook)",
+              "(message from inline hook)",
             reason: "INVALID_EMAIL_DOMAIN",
             locationType: "body",
             location: "email",
@@ -146,6 +193,8 @@ router.post("/domain", function (req, res) {
       statusCode = 200;
   }
 
+  
+
   // compose the response body
   let responseBody = {};
 
@@ -162,6 +211,8 @@ router.post("/domain", function (req, res) {
 
   res.status(statusCode).send(responseBody);
 });
+
+
 
 /**
  * Expose the API routes
