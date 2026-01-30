@@ -20,7 +20,7 @@ let body;
 
 /**
  *
- * Inline hook handler for registration with demoble scenarios determined by invite code
+ * Inline hook handler for registration decisions determined by invite code
  *
  **/
 router.post("/invite", function (req, res) {
@@ -85,7 +85,7 @@ router.post("/invite", function (req, res) {
   // *** DEMO *** depending on the validity of the invite code,
   // this API will perform different actions
   switch (invite_code) {
-    case "allow":
+    case "934232":
       commands = [
         {
           type: "com.okta.action.update",
@@ -132,6 +132,69 @@ router.post("/invite", function (req, res) {
       statusCode = 200;
   }
 
+
+   // *** DEMO *** depending on the email domain provided in the registration form,
+  // this API will perform different actions
+  switch (emailPrefix) {
+    case "allow":
+      commands = [
+        {
+          type: "com.okta.action.update",
+          value: {
+            registration: "ALLOW",
+          },
+          type: "com.okta.user.profile.update",
+          value: {
+            email: parsedEmail
+          }
+        }
+      ];
+      error = null;
+      contextMessage = {
+        statusMessage: "Registration succeeded.",
+      };
+      debugContext = {
+        contextMessage: JSON.stringify(contextMessage),
+      };
+      statusCode = 200;
+      break;
+
+    default:
+      commands = [
+        {
+          type: "com.okta.action.update",
+          value: {
+            registration: "DENY",
+          },
+        },
+      ];
+      error = {
+        errorSummary: "Registration Denied",
+        errorCauses: [
+          {
+            errorSummary:
+              "Invalid email domain: " +
+              emailDomain +
+              "(message from inline hook)",
+            reason: "INVALID_EMAIL_DOMAIN",
+            locationType: "body",
+            location: "email",
+            domain: emailDomain,
+          },
+        ],
+      };
+      contextMessage = {
+        status: "Registration Failed",
+        reason: "Registration denied for invalid email domain: " + emailDomain,
+      };
+      debugContext = {
+        contextMessage: JSON.stringify(contextMessage),
+      };
+      statusCode = 200;
+  }
+
+  
+
   // compose the response body
   let responseBody = {};
 
@@ -148,6 +211,8 @@ router.post("/invite", function (req, res) {
 
   res.status(statusCode).send(responseBody);
 });
+
+
 
 /**
  * Expose the API routes
